@@ -86,17 +86,6 @@ public class PostItemController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/item/{id}/finished")
-    public ResponseEntity<PostItemDto> finished(@PathVariable Long id) {
-        PostItem postItem = postItemService.findById(id);
-        postItem.setStatus(PostItemStatus.FINISHED);
-        if (!postItemService.update(postItem)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        PostItemDto response = postItemMapper.toDto(postItem);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @GetMapping("item/{id}/history")
     public ResponseEntity<String> getHistory(@PathVariable Long id) {
         PostItem postItem = postItemService.findById(id);

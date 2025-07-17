@@ -9,7 +9,6 @@ import com.test.postservice.letterservice.entity.PostOffice;
 import com.test.postservice.letterservice.repository.PostItemRepository;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
