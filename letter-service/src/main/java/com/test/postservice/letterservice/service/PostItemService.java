@@ -1,6 +1,5 @@
 package com.test.postservice.letterservice.service;
 
-import com.test.postservice.letterservice.dto.PostItemDto;
 import com.test.postservice.letterservice.entity.PostItem;
 import com.test.postservice.letterservice.entity.PostOffice;
 
@@ -17,5 +16,7 @@ public interface PostItemService {
 
     boolean delete(Long id);
 
-    boolean setPostOffices(PostOffice postOffice, Long id);
+    void setPostOffices(PostOffice postOffice, Long id);
+
+    void finishedDelivery(long id);
 }

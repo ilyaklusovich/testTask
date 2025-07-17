@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @AllArgsConstructor
@@ -107,5 +106,13 @@ public class PostItemController {
         kafkaSender.sendMessage(Jackson.toJsonString(sb.append(postItem.getStatus()).toString()), "posts");
         return ResponseEntity.ok()
                 .body(sb.toString());
+    }
+
+    @PatchMapping("item/{id}/finished")
+    public ResponseEntity<PostItemDto> setFinished(@PathVariable Long id) {
+        PostItem postItem = postItemService.findById(id);
+        postItemService.finishedDelivery(id);
+        PostItemDto response = postItemMapper.toDto(postItem);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

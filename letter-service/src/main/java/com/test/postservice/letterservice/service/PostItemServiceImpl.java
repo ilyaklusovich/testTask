@@ -1,5 +1,8 @@
 package com.test.postservice.letterservice.service;
 
+import com.test.postservice.letterservice.aop.Auditable;
+import com.test.postservice.letterservice.aop.AuditingActionType;
+import com.test.postservice.letterservice.aop.AuditingEntityType;
 import com.test.postservice.letterservice.entity.PostItem;
 import com.test.postservice.letterservice.entity.PostItemStatus;
 import com.test.postservice.letterservice.entity.PostOffice;
@@ -17,10 +20,13 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class PostItemServiceImpl implements PostItemService {
 
     private final PostItemRepository postItemRepository;
+
+    public PostItemServiceImpl(PostItemRepository postItemRepository) {
+        this.postItemRepository = postItemRepository;
+    }
 
     @Override
     public List<PostItem> findAll() {
@@ -35,6 +41,7 @@ public class PostItemServiceImpl implements PostItemService {
 
     @Transactional
     @Override
+    @Auditable(actionType = AuditingActionType.CHANGE_STATUS, entityType = AuditingEntityType.POST_ITEM)
     public boolean create(PostItem postItem) {
         Optional<PostItem> postItemOptional = postItemRepository.findById(postItem.getId());
         if (postItemOptional.isPresent()) {
@@ -48,6 +55,7 @@ public class PostItemServiceImpl implements PostItemService {
         log.info("create item {}", postItem);
         return true;
     }
+    @Auditable(actionType = AuditingActionType.UPDATE, entityType = AuditingEntityType.POST_ITEM)
     @Transactional
     @Override
     public boolean update(PostItem postItem) {
@@ -60,6 +68,7 @@ public class PostItemServiceImpl implements PostItemService {
         log.error("update item error, ID{}", postItem.getId());
         return false;
     }
+    @Auditable(actionType = AuditingActionType.DELETE, entityType = AuditingEntityType.POST_ITEM)
     @Transactional
     @Override
     public boolean delete(Long id) {
@@ -71,14 +80,13 @@ public class PostItemServiceImpl implements PostItemService {
         log.error("delete item error, with id{}", id);
         return false;
     }
-
+    @Auditable(actionType = AuditingActionType.CHANGE_STATUS, entityType = AuditingEntityType.POST_ITEM)
     @Override
-    public boolean setPostOffices(PostOffice postOffice, Long id) {
+    public void setPostOffices(PostOffice postOffice, Long id) {
         Optional<PostItem> postItem = postItemRepository.findById(id);
         if (postItem.isEmpty()) {
-            return false;
+            return;
         }
-
         List<PostOffice> postOfficeList = postItem.get().getPostOffices();
         postOfficeList.add(postOffice);
         postItem.get().setPostOffices(postOfficeList);
@@ -86,6 +94,13 @@ public class PostItemServiceImpl implements PostItemService {
             postItem.get().setStatus(PostItemStatus.SEND_TO_INTERMEDIATE);
         }
         postItemRepository.saveAndFlush(postItem.get());
-        return true;
+    }
+    @Auditable(actionType = AuditingActionType.CHANGE_STATUS, entityType = AuditingEntityType.POST_ITEM)
+    public void finishedDelivery(long id) {
+        Optional<PostItem> postItem = Optional.ofNullable(postItemRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Item with id %d not found", id))));
+        if (postItem.isPresent()) {
+            postItem.get().setStatus(PostItemStatus.FINISHED);
+            postItemRepository.saveAndFlush(postItem.get());
+        }
     }
 }

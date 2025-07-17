@@ -1,6 +1,8 @@
 package com.test.postservice.letterservice.service;
 
-import com.test.postservice.letterservice.dto.PostOfficeDto;
+import com.test.postservice.letterservice.aop.Auditable;
+import com.test.postservice.letterservice.aop.AuditingActionType;
+import com.test.postservice.letterservice.aop.AuditingEntityType;
 import com.test.postservice.letterservice.entity.PostOffice;
 import com.test.postservice.letterservice.repository.PostOfficeRepository;
 import jakarta.ws.rs.BadRequestException;
@@ -31,6 +33,7 @@ public class PostOfficeServiceImpl implements PostOfficeService {
         return postOfficeRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Office with id %d not found", id)));
     }
 
+    @Auditable(actionType = AuditingActionType.CREATE, entityType = AuditingEntityType.POST_OFFICE)
     @Transactional
     @Override
     public boolean create(PostOffice postOffice) {
@@ -45,6 +48,7 @@ public class PostOfficeServiceImpl implements PostOfficeService {
         log.info("create office {}", postOffice);
         return true;
     }
+    @Auditable(actionType = AuditingActionType.UPDATE, entityType = AuditingEntityType.POST_OFFICE)
     @Transactional
     @Override
     public boolean update(PostOffice postOffice) {
@@ -59,6 +63,8 @@ public class PostOfficeServiceImpl implements PostOfficeService {
     }
     @Transactional
     @Override
+    @Auditable(actionType = AuditingActionType.DELETE, entityType = AuditingEntityType.POST_OFFICE)
+
     public boolean delete(Long id) {
         if (postOfficeRepository.findById(id).isPresent()) {
             postOfficeRepository.deleteById(id);
