@@ -2,49 +2,70 @@ package com.test.postservice.letterservice.service;
 
 import com.test.postservice.letterservice.dto.PostOfficeDto;
 import com.test.postservice.letterservice.entity.PostOffice;
-import com.test.postservice.letterservice.mapper.PostOfficeMapper;
 import com.test.postservice.letterservice.repository.PostOfficeRepository;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
-@Slf4j
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PostOfficeServiceImpl implements PostOfficeService {
 
     private final PostOfficeRepository postOfficeRepository;
-    private  PostOfficeMapper postOfficeMapper;
 
     @Override
-    public List<PostOfficeDto> findAll() {
-        return List.of();
-    }
-
-    @Override
-    public PostOfficeDto findById(long id) {
-        return null;
-    }
-
-    public PostOfficeDto create(PostOfficeDto postOfficeDto) {
-        log.info("Creating new post item");
-        PostOffice entity = postOfficeMapper.toEntity(postOfficeDto);
-        PostOffice savedEntity = postOfficeRepository.save(entity);
-        return postOfficeMapper.toDto(savedEntity);
+    public List<PostOffice> findAll() {
+        return postOfficeRepository.findAll();
     }
 
     @Override
-    public PostOfficeDto update(Long id, PostOfficeDto postOfficeDto) {
-        return null;
+    public PostOffice findById(long id) {
+        log.info("office with ID{}", id);
+        return postOfficeRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Office with id %d not found", id)));
     }
 
-    public void update(PostOffice postOffice) {
-        postOfficeRepository.save(postOffice);
+    @Transactional
+    @Override
+    public boolean create(PostOffice postOffice) {
+        Optional<PostOffice> postOfficeOptional = postOfficeRepository.findById(postOffice.getId());
+        if (postOfficeOptional.isPresent()) {
+            log.error("create post Office error {}", postOffice);
+            throw new BadRequestException(String.format("post Office with id %d already exists",
+                    postOffice.getId()));
+        }
+        postOffice.setId(null);
+        postOfficeRepository.saveAndFlush(postOffice);
+        log.info("create office {}", postOffice);
+        return true;
     }
-
-    public void delete(Long id) {
-        postOfficeRepository.deleteById(id);
+    @Transactional
+    @Override
+    public boolean update(PostOffice postOffice) {
+        Optional<PostOffice> postOfficeOptional = postOfficeRepository.findById(postOffice.getId());
+        if (postOfficeOptional.isPresent()) {
+            postOfficeRepository.save(postOffice);
+            log.info("update office with ID{}", postOffice.getId());
+            return true;
+        }
+        log.error("update office error, ID{}", postOffice.getId());
+        return false;
+    }
+    @Transactional
+    @Override
+    public boolean delete(Long id) {
+        if (postOfficeRepository.findById(id).isPresent()) {
+            postOfficeRepository.deleteById(id);
+            log.info("delete office with ID{}", id);
+            return true;
+        }
+        log.error("delete office error, with id{}", id);
+        return false;
     }
 }

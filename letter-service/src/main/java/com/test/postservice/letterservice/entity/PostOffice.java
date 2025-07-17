@@ -23,4 +23,7 @@ public class PostOffice {
 
     @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
+    private int postCode;
 }

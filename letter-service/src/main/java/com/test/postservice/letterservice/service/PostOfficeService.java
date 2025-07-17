@@ -1,13 +1,18 @@
 package com.test.postservice.letterservice.service;
 
 import com.test.postservice.letterservice.dto.PostOfficeDto;
+import com.test.postservice.letterservice.entity.PostOffice;
 
 import java.util.List;
 
 public interface PostOfficeService {
-    List<PostOfficeDto> findAll();
-    PostOfficeDto findById(long id);
-    PostOfficeDto create(PostOfficeDto postOfficeDto);
-    PostOfficeDto update(Long id, PostOfficeDto postOfficeDto); // Исправленная сигнатура
-    void delete(Long id);
+    List<PostOffice> findAll();
+
+    PostOffice findById(long id);
+
+    boolean create(PostOffice postOffice);
+
+    boolean update(PostOffice postOffice); // Исправленная сигнатура
+
+    boolean delete(Long id);
 }

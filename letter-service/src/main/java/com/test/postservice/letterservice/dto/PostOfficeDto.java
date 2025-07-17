@@ -6,6 +6,8 @@ import lombok.Data;
 
 @Data
 public class PostOfficeDto {
+    long id;
+
     @NotNull(message = "office name can not be null")
     private String name;
 

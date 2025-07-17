@@ -10,12 +10,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "post_item")
@@ -36,7 +38,10 @@ public class PostItem {
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @Column(nullable = false)
+    private PostItemStatus status;
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "post_item_offices",
             joinColumns = @JoinColumn(name = "post_item_id"),
