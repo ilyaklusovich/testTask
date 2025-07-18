@@ -2,9 +2,11 @@ package com.test.postservice.letterservice.service;
 
 import com.test.postservice.letterservice.entity.PostItem;
 import com.test.postservice.letterservice.entity.PostOffice;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface PostItemService {
     List<PostItem> findAll();
 

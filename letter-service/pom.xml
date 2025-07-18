@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.test.post-service</groupId>
+    <groupId>com.testTask.post-service</groupId>
     <artifactId>letter-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 

@@ -1,10 +1,10 @@
 package com.test.postservice.letterservice.service;
 
 import com.test.postservice.letterservice.entity.Audit;
+import com.test.postservice.letterservice.exception.BadRequestException;
+import com.test.postservice.letterservice.exception.NotFoundException;
 import com.test.postservice.letterservice.repository.AuditRepository;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

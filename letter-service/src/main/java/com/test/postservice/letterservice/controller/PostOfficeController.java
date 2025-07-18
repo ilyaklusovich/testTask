@@ -2,7 +2,6 @@ package com.test.postservice.letterservice.controller;
 
 import com.amazonaws.util.json.Jackson;
 import com.test.postservice.letterservice.dto.PostOfficeDto;
-import com.test.postservice.letterservice.entity.PostItem;
 import com.test.postservice.letterservice.entity.PostOffice;
 import com.test.postservice.letterservice.kafka.KafkaSender;
 import com.test.postservice.letterservice.mapper.PostOfficeMapper;

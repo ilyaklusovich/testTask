@@ -1,6 +1,5 @@
 package com.test.postservice.letterservice.service;
 
-import com.test.postservice.letterservice.dto.PostOfficeDto;
 import com.test.postservice.letterservice.entity.PostOffice;
 
 import java.util.List;

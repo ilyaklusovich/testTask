@@ -8,7 +8,7 @@
 		<version>3.5.3</version>
 		<relativePath/>
 	</parent>
-	<groupId>com.test</groupId>
+	<groupId>com.testTask</groupId>
 	<artifactId>post-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>post-service</name>
@@ -136,6 +136,16 @@
 							-Amapstruct.defaultComponentModel=spring
 						</compilerArg>
 					</compilerArgs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>
+						-javaagent:${settings.localRepository}/org/mockito/mockito-core/5.17.0/mockito-core-5.17.0.jar
+						-Xshare:off
+					</argLine>
 				</configuration>
 			</plugin>
 			<plugin>

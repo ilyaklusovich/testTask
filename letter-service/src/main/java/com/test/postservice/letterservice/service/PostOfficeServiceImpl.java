@@ -4,9 +4,10 @@ import com.test.postservice.letterservice.aop.Auditable;
 import com.test.postservice.letterservice.aop.AuditingActionType;
 import com.test.postservice.letterservice.aop.AuditingEntityType;
 import com.test.postservice.letterservice.entity.PostOffice;
+import com.test.postservice.letterservice.exception.BadRequestException;
+import com.test.postservice.letterservice.exception.NotFoundException;
 import com.test.postservice.letterservice.repository.PostOfficeRepository;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
