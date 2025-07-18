@@ -1,12 +1,9 @@
 package com.test.postservice.letterservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.test.postservice.letterservice.dto.PostItemDto;
-import com.test.postservice.letterservice.entity.PostItem;
-import com.test.postservice.letterservice.entity.PostItemStatus;
-import com.test.postservice.letterservice.entity.PostItemType;
-import com.test.postservice.letterservice.mapper.PostItemMapper;
-import com.test.postservice.letterservice.service.PostItemService;
+import com.test.postservice.letterservice.dto.PostOfficeDto;
+import com.test.postservice.letterservice.entity.PostOffice;
+import com.test.postservice.letterservice.mapper.PostOfficeMapper;
 import com.test.postservice.letterservice.service.PostOfficeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PostItemControllerTest {
+public class PostOfficeControllerTest {
 
     @Autowired
     MockMvc mvc;
 
     @MockitoBean
-    PostItemMapper postItemMapper;
-    @MockitoBean
-    PostItemService postItemService;
+    PostOffice postOffice;
     @MockitoBean
     PostOfficeService postOfficeService;
+    @MockitoBean
+    PostOfficeMapper postOfficeMapper;
     @Autowired
     ObjectMapper objectMapper;
 
@@ -48,22 +45,22 @@ public class PostItemControllerTest {
 
 
     @Test
-    void getPostItems() throws Exception {
-        when(postItemService.findAll()).thenReturn(getPostItemLIst());
-        mvc.perform(get("/api/items"))
+    void getPostOffices() throws Exception {
+        when(postOfficeService.findAll()).thenReturn(getPostOfficesList());
+        mvc.perform(get("/api/post-offices"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
     @Test
-    void addPostItem() throws Exception {
-        when(postItemMapper.toEntity(getPostItemsDto())).thenReturn(getPostItemLIst().getFirst());
-        PostItem postItem = getPostItemLIst().getFirst();
-        when(postItemService.create(postItem)).thenReturn(true);
-        when(postItemMapper.toDto(postItem)).thenReturn(getPostItemsDto());
+    void addPostOffice() throws Exception {
+        when(postOfficeMapper.toEntity(getPostOfficeDto())).thenReturn(getPostOfficesList().getFirst());
+        PostOffice postOffice = getPostOfficesList().getFirst();
+        when(postOfficeService.create(postOffice)).thenReturn(true);
+        when(postOfficeMapper.toDto(postOffice)).thenReturn(getPostOfficeDto());
         mvc.perform(MockMvcRequestBuilders
-                        .post("/api/item", "{id}", 1)
-                        .content(objectMapper.writeValueAsString(getPostItemsDto()))
+                        .post("/api/post-office", "{id}", 1)
+                        .content(objectMapper.writeValueAsString(getPostOfficeDto()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -71,30 +68,25 @@ public class PostItemControllerTest {
                 .andExpect(jsonPath("$.name").value(POST_NAME));
     }
 
-    private List<PostItem> getPostItemLIst() {
-        PostItem one = PostItem.builder()
-                .status(PostItemStatus.NONE)
+    private List<PostOffice> getPostOfficesList() {
+        PostOffice one = PostOffice.builder()
                 .address(ADDRESS)
                 .postCode(POST_CODE)
                 .name(POST_NAME)
                 .build();
-        PostItem two = PostItem.builder()
-                .status(PostItemStatus.ACCEPTED)
+        PostOffice two = PostOffice.builder()
                 .address(ADDRESS + ID2)
                 .id(ID2)
                 .build();
         return List.of(one, two);
     }
 
-    private PostItemDto getPostItemsDto() {
-        return PostItemDto.builder()
-                .status(PostItemStatus.NONE)
+    private PostOfficeDto getPostOfficeDto() {
+        return PostOfficeDto.builder()
                 .id(ID1)
                 .address(ADDRESS)
                 .postCode(POST_CODE)
                 .name(POST_NAME)
-                .status(PostItemStatus.ACCEPTED)
-                .postItemType(PostItemType.POSTCARD)
                 .build();
     }
 }
